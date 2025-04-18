@@ -1,25 +1,19 @@
-name: Flutter - Android Build Dev
+name: Flutter - Ios Build Dev
 
 on:
   push:
     branches:
-      - dev
+      - ios-dev
   pull_request:
     branches:
-      - dev
+      - ios-dev
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Setup JDK
-        uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'zulu'
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
@@ -42,5 +36,11 @@ jobs:
       - name: Run tests
         run: flutter test
 
-      - name: Build APK
-        run: flutter build apk --release --build-name=1.0.0 --build-number=1
+      - name: Install ios dependencies
+        run: |
+          cd ios
+          pod install --repo-update
+          cd ..
+
+      - name: Build iOS
+        run: flutter build ios --release --build-name=1.0.0 --build-number=1 --no-codesign

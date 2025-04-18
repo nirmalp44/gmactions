@@ -1,12 +1,12 @@
-name: Flutter - Android Build Dev
+name: Flutter - Android-ios Build Dev
 
 on:
   push:
     branches:
-      - dev
+      - android-ios-dev
   pull_request:
     branches:
-      - dev
+      - android-ios-dev
 
 jobs:
   build:
@@ -30,6 +30,12 @@ jobs:
       - name: Install Dependencies
         run: flutter pub get
 
+      - name: Install ios dependencies
+        run: |
+          cd ios
+          pod install --repo-update
+          cd ..
+
       - name: Auto format the dart code
         run: dart format .
 
@@ -45,16 +51,5 @@ jobs:
       - name: Build APK
         run: flutter build apk --release --build-name=1.0.0 --build-number=1
 
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: android-dev-apk
-          path: build/app/outputs/flutter-apk/app-release.apk
-
-      - name: upload artifact to Firebase app distribution
-        uses: emertozd/Firebase-Distribution-Github-Action@v2
-        with:
-          appId: ${{ secrets.FIREBASE_APP_ID_ANDROID_DEV }}
-          serviceCredentials: ${{ secrets.FIREBASE_APP_DISTRIBUTION_CREDENTIAL_KEY }}
-          groups: android-internal
-          file: build/app/outputs/flutter-apk/app-release.apk
+      - name: Build iOS
+        run: flutter build ios --release --build-name=1.0.0 --build-number=1 --no-codesign

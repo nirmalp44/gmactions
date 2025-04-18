@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Firebase Auth',
+      title: 'Flutter Firebase Authg',
       theme: ThemeData(primarySwatch: Colors.blue),
       home:  SignInScreen(), // ✅ make SignInScreen const if possible
     );

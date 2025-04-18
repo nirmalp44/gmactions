@@ -4,51 +4,71 @@ import 'sign_up_screen.dart';
 import 'home_screen.dart';
 
 class SignInScreen extends StatefulWidget {
+  const SignInScreen({super.key}); // ✅ Named key constructor
+
   @override
-  _SignInScreenState createState() => _SignInScreenState();
+  State<SignInScreen> createState() => SignInScreenState(); // ✅ Made public
 }
 
-class _SignInScreenState extends State<SignInScreen> {
+class SignInScreenState extends State<SignInScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final auth = FirebaseAuth.instance;
 
   void signIn() async {
     try {
-      UserCredential userCredential = await auth.signInWithEmailAndPassword(
-        email: emailController.text,
+      await auth.signInWithEmailAndPassword(
+        email: emailController.text.trim(),
         password: passwordController.text,
       );
+
+      if (!mounted) return; // ✅ Fix build context after async gap
 
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (_) => HomeScreen(email: userCredential.user?.email),
+          builder: (_) => HomeScreen(),
         ),
       );
     } catch (e) {
+      if (!mounted) return;
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Sign in failed: $e')),
       );
     }
   }
- @override
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Sign In')),
+      appBar: AppBar(title: const Text('Sign In')),
       body: Padding(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            TextField(controller: emailController, decoration: InputDecoration(labelText: 'Email')),
-            TextField(controller: passwordController, decoration: InputDecoration(labelText: 'Password'), obscureText: true),
-            SizedBox(height: 20),
-            ElevatedButton(onPressed: signIn, child: Text('Sign In')),
+            TextField(
+              controller: emailController,
+              decoration: const InputDecoration(labelText: 'Email'),
+            ),
+            TextField(
+              controller: passwordController,
+              decoration: const InputDecoration(labelText: 'Password'),
+              obscureText: true,
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: signIn,
+              child: const Text('Sign In'),
+            ),
             TextButton(
               onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (_) => SignUpScreen()));
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) =>  SignUpScreen()),
+                );
               },
-              child: Text('Don\'t have an account? Sign Up'),
+              child: const Text('Don\'t have an account? Sign Up'),
             ),
           ],
         ),

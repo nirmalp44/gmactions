@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatelessWidget {
-  final String? email;
-
-  HomeScreen({this.email});
+  const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Welcome')),
-      body: Center(
+      appBar: AppBar(title: const Text('Welcome')),
+      body: const Center(
         child: Text(
-          'Hello, ${email ?? 'User'}!',
+          'Hello!',
           style: TextStyle(fontSize: 24),
         ),
       ),
